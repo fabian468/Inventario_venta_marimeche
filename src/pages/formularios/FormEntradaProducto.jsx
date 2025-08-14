@@ -5,6 +5,7 @@ import { supabase } from "../../tools/supabaseConnect"; // Ajusta la ruta según
 function FormEntradaProducto() {
     const [productos, setProductos] = useState([]);
     const [proveedores, setProveedores] = useState([]);
+    const [mensaje, setMensaje] = useState("");
     const { register, handleSubmit, reset } = useForm();
 
     // Cargar productos
@@ -40,72 +41,88 @@ function FormEntradaProducto() {
         const { error } = await supabase.from("entradas_inventario").insert([data]);
 
         if (error) {
-            console.error("Error guardando entrada:", error);
+            setMensaje("❌ Error: " + error.message);
         } else {
-            alert("Entrada registrada correctamente");
+            setMensaje("✅ Entrada registrada correctamente");
             reset(); // Limpia el formulario
         }
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 max-w-lg mx-auto bg-white rounded shadow">
-            <h2 className="text-xl font-bold mb-4">Entrada de Mercadería</h2>
+        <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-sm">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Entrada de Mercadería</h2>
+            <div className="space-y-4">
+                <div>
+                    <select
+                        {...register("producto_id", { required: true })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">-- Seleccionar producto --</option>
+                        {productos.map((p) => (
+                            <option key={p.id} value={p.id}>
+                                {p.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-            <label className="block mb-2">Producto:</label>
-            <select
-                {...register("producto_id", { required: true })}
-                className="w-full border p-2 mb-4"
-            >
-                <option value="">Seleccione un producto</option>
-                {productos.map((p) => (
-                    <option key={p.id} value={p.id}>
-                        {p.nombre}
-                    </option>
-                ))}
-            </select>
+                <div>
+                    <select
+                        {...register("proveedor_id")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">-- Seleccionar proveedor --</option>
+                        {proveedores.map((prov) => (
+                            <option key={prov.id} value={prov.id}>
+                                {prov.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-            <label className="block mb-2">Proveedor:</label>
-            <select
-                {...register("proveedor_id")}
-                className="w-full border p-2 mb-4"
-            >
-                <option value="">Seleccione un proveedor</option>
-                {proveedores.map((prov) => (
-                    <option key={prov.id} value={prov.id}>
-                        {prov.nombre}
-                    </option>
-                ))}
-            </select>
+                <div>
+                    <input
+                        type="number"
+                        step="0.001"
+                        placeholder="Cantidad (kg)"
+                        {...register("cantidad", { required: true })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
 
-            <label className="block mb-2">Cantidad (kg):</label>
-            <input
-                type="number"
-                step="0.001"
-                {...register("cantidad", { required: true })}
-                className="w-full border p-2 mb-4"
-            />
+                <div>
+                    <input
+                        type="number"
+                        step="0.01"
+                        placeholder="Precio Unitario ($)"
+                        {...register("precio_unitario", { required: true })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
 
-            <label className="block mb-2">Precio Unitario ($):</label>
-            <input
-                type="number"
-                step="0.01"
-                {...register("precio_unitario", { required: true })}
-                className="w-full border p-2 mb-4"
-            />
+                <div>
+                    <textarea
+                        placeholder="Observaciones"
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                        {...register("observaciones")}
+                    />
+                </div>
 
-            <label className="block mb-2">Observaciones:</label>
-            <textarea
-                {...register("observaciones")}
-                className="w-full border p-2 mb-4"
-            />
+                <button
+                    onClick={handleSubmit(onSubmit)}
+                    className="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors duration-200"
+                >
+                    Guardar Entrada
+                </button>
+            </div>
 
-            <button
-                type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-                Guardar Entrada
-            </button>
-        </form>
+            {mensaje && (
+                <div className="mt-4 p-3 rounded-md bg-blue-50 border border-blue-200">
+                    <p className="text-sm text-blue-800">{mensaje}</p>
+                </div>
+            )}
+        </div>
     );
 }
 
