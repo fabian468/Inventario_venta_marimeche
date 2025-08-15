@@ -42,7 +42,9 @@ export default function Login() {
 
     return (
         <div className="max-w-sm mx-auto">
-            <img className='w-3/4 m-auto' src={logo} alt="" />
+            <div className='w-3/4 m-auto'>
+                <img src={logo} alt="" />
+            </div>
             <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
             <form onSubmit={handleLogin} className="space-y-4">
                 <input
