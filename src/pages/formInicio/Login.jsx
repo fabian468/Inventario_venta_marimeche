@@ -42,7 +42,7 @@ export default function Login() {
 
     return (
         <div className="max-w-sm mx-auto">
-            <div className='w-3/4 m-auto'>
+            <div className='w-3/4 h-64 m-auto'>
                 <img src={logo} alt="" />
             </div>
             <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
