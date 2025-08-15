@@ -1,13 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormRegistroCategorias from "./FormRegistroCategorias";
 import FormRegistroProducto from "./FormRegistroProducto";
 import FormVentas from "./FormVentas";
 import FormEntradaProducto from "./FormEntradaProducto";
 import ListaInventarios from "../inventarios/ListaInventarios";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+
 
 function Dashboard() {
     const [activeTab, setActiveTab] = useState("inventario");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    useEffect(() => {
+        // Detecta si el ancho es menor o igual a 768px (móvil/tablet)
+        if (window.innerWidth <= 768) {
+            const driverObj = driver();
+            driverObj.highlight({
+                element: '#menu-toggle',
+                popover: {
+                    title: 'Menu',
+                    description: 'Presiona para abrir el menú de opciones',
+                },
+            });
+        }
+    }, []);
 
     const menuItems = [
         { id: "producto", label: "Registrar Producto" },
@@ -26,6 +43,7 @@ function Dashboard() {
 
                         {/* Botón hamburguesa - visible solo en móvil */}
                         <button
+                            id="menu-toggle"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                         >

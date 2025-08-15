@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../tools/supabaseConnect";
 
+
 function ListaInventarios() {
     const [productos, setProductos] = useState([]);
     const [productosFiltrados, setProductosFiltrados] = useState([]);
@@ -12,6 +13,7 @@ function ListaInventarios() {
 
     // Cargar productos y sus movimientos
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 // Cargar productos
